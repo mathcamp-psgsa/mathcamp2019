@@ -1,4 +1,4 @@
-# mathcamp2019
+# Mathcamp2019
 PSGSA Mathcamp 2019 @UIUC
 
 
