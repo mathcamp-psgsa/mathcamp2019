@@ -1,0 +1,59 @@
+---
+title: "Data Visualization: Practice"
+author: ""
+date: ""
+output: pdf_document
+---
+
+Let's create some graphs with `ggplot2`! You can use the power point and the `ggplot2` [cheat sheet](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf) for reference.
+
+The data comes from the **2016 American National Election Study** (ANES). The ANES surveys a nationally representative sample of the U.S. public on voting, public opinion, and political participation.
+
+The following code chunk includes code to load a practice dataset and to recode its variables. Run the code chunk in its entirety.
+
+We are only looking at a small subset of variables:
+
+- age (numeric)
+- gender: 1 = male, 2 = female (categorical)
+- partyID: 1 = Democrat, 2 = Republican, 3 = Independent (categorical)
+- feelTrump: How would you rate Donald Trump? (0-100) (numeric)
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+rm(list=ls()) # clear out objects from workspace
+
+#load data
+library(readstata13)
+anes16 <- read.dta13("http://jakebowers.org/PS531/anes_timeseries_2016.dta")
+
+anes16 <- subset(anes16, select=c("V161267", "V161342", "V161155", "V161087"))
+
+#change names of variables
+install.packages("reshape")
+library(reshape)
+anes16 <- rename(anes16, c(V161267 ="age", V161342 = "gender", V161155 = "partyID", V161087 = "feelTrump"))
+
+#recode variables
+anes16$age <- with(anes16, ifelse(age < 0, NA, age))
+anes16$feelTrump <- with(anes16, ifelse(feelTrump < 0, NA, feelTrump))
+anes16$partyID <- with(anes16, ifelse(partyID < 1 | partyID > 4, NA, partyID))
+anes16$partyID[anes16$partyID==1] <- "Democrat"
+anes16$partyID[anes16$partyID==2] <- "Republican"
+anes16$partyID[anes16$partyID==3] <- "Independent"
+anes16$gender <- with(anes16, ifelse(gender < 0 | gender > 2, NA, gender))
+anes16$gender[anes16$gender==1] <- "male"
+anes16$gender[anes16$gender==2] <- "female"
+anes16 <- anes16[complete.cases(anes16),]
+```
+
+1. What is the age distribution in the sample? (Hint: age is a continuous/numeric variable.) Add a title and label the axes of your plot.
+
+```{r}
+
+```
+
+
+2. Does support for Trump (`feelTrump`) vary by gender? (Hint: one variable is numeric, the other categorical.) Add a title and label the axes of your plot.
+
+```{r}
+
+```
